@@ -4,21 +4,68 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Startup.unity
+    guid: b282f53e805b17e42a0f53dbdefe3669
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: b021f2dadec58aa4eb3ab5c09f8d842a
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: 511ecb43d99855c44b4c772aaf6aec44
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: 8ac2b2b83bd041c4f803dae796006664
+  - enabled: 1
+    path: Assets/Scenes/Level 4.unity
+    guid: 3241f62f164bf9049b6204d60a2c31ec
+  - enabled: 1
+    path: Assets/Scenes/Level 5.unity
+    guid: 6ea1c89089d721d41a693b8e9300390c
+  - enabled: 1
+    path: Assets/Scenes/Level 6.unity
+    guid: a95aa8692488bfe46ad79b6beadeb9fe
+  - enabled: 1
+    path: Assets/Scenes/Level 7.unity
+    guid: afddbd262ffac0d4eaf5c44cdec9232d
+  - enabled: 1
+    path: Assets/Scenes/Level 8.unity
+    guid: f2d5ca85fdd09a64591af442b3cfe0d1
+  - enabled: 1
+    path: Assets/Scenes/Level 9.unity
+    guid: d0175ea44ac95f248915b6e0d4cf227d
+  - enabled: 1
+    path: Assets/Scenes/Level 10.unity
+    guid: 49bb1a0494bd93e4f80ad4a471ab209e
+  - enabled: 1
+    path: Assets/Scenes/Level 11.unity
+    guid: 63ab858445739034d92d9c4ca1a0ed8b
+  - enabled: 1
+    path: Assets/Scenes/Level 12.unity
+    guid: a52cc536f79db294a9cc036eaf9acb04
+  - enabled: 1
+    path: Assets/Scenes/Level 13.unity
+    guid: a62471443e3f59b4b92856cfb1541a99
+  - enabled: 1
+    path: Assets/Scenes/Level 14.unity
+    guid: 8bb8488c879c8ed4f80925887b2c4076
+  - enabled: 1
+    path: Assets/Scenes/Level 15.unity
+    guid: 8a0e3fe9b3f3ccf4aa6946295d5496c8
+  - enabled: 1
+    path: Assets/Scenes/Level 16.unity
+    guid: 60460184ff78e97459de3c0058ec1651
+  - enabled: 1
+    path: Assets/Scenes/Level 17.unity
+    guid: 06ea0a59d2cce00498ef83a943f5d4be
+  - enabled: 1
+    path: Assets/Scenes/ARScene.unity
+    guid: 523e5b4e7bb88c34b9392ea89061a698
   m_configObjects:
-    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: d8f469020c1de994f9219805177f29f1,
       type: 2}
-    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 89a6d18d3df8d3e4fa917b0f9a963bc0,
+    com.unity.input.settings: {fileID: 11400000, guid: 14a82be2acba58f4a89a584858e2cfd1,
       type: 2}
-    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: de8a8e4f987434338a4b1062feb8d069,
-      type: 2}
-    com.unity.xr.arcore.PlayerSettings: {fileID: 11400000, guid: c2f7b8d7c0bff4d10874cbcf3f24af78,
-      type: 2}
-    com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: b27ec7d82a91a48e69fd689ad6808e5e,
-      type: 2}
-    com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: 1eb95d77acb39444e8cf44313496a874,
-      type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 58f40b12bbc864f3c96c6505a9a1e1e3,
-      type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 6bb381a8ba31f114d9724357633b4625,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: feb7b7ded1802fd469552158475cd81b,
       type: 2}
