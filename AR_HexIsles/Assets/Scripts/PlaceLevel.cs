@@ -7,15 +7,11 @@ using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
 
 [RequireComponent(requiredComponent: typeof(ARRaycastManager),
     requiredComponent2: typeof(ARPlaneManager))]
-public class PlaceLevel : MonoBehaviour
+public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
 {
     private ARRaycastManager aRRaycastManager;
-    private bool isScenePlaced = false;
-
     private ARPlaneManager arPlaneManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
-
-    [SerializeField] private GameObject[] prefabArray;
 
     private void Awake()
     {
@@ -43,15 +39,13 @@ public class PlaceLevel : MonoBehaviour
     {
         if (finger.index != 0) return;
 
-        if (aRRaycastManager.Raycast(finger.currentTouch.screenPosition, hits, TrackableType.PlaneWithinPolygon) && !isScenePlaced)
+        if (aRRaycastManager.Raycast(finger.currentTouch.screenPosition, hits, TrackableType.PlaneWithinPolygon) && !Manager.Current.isScenePlaced)
         {
             foreach (ARRaycastHit hit in hits)
             {
                 Pose pose = hit.pose;
-                GameObject obj = Instantiate(prefabArray[0], pose.position, pose.rotation);
-                isScenePlaced = true;
-                obj.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
-
+                LevelController.Current.SetObjectLevelPose(pose);
+                Manager.Current.setScenePlaced(true);
             }
 
             foreach (var plane in arPlaneManager.trackables)

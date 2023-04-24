@@ -24,6 +24,7 @@ public class Player : MouseSelectable
             height = value;
             transform.localPosition = new Vector3(0, .5f * GridUtility.GetFieldAt(position).Height + .25f * height - .25f, 0);
             transform.localScale = new Vector3(transform.localScale.x, .5f * height, transform.localScale.x);
+            
         }
     }
 
@@ -69,11 +70,21 @@ public class Player : MouseSelectable
         initialColor = Color;
     }
 
+    private bool isPositionInAR = false;
+
     private void Update()
     {
+        if (Manager.Current.isARLevel && !isPositionInAR)
+        {
+            targetPosition = transform.position;
+            isPositionInAR = true;
+        }
         // Move to target position
         if (transform.position != targetPosition)
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+        {
+           transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+        }
+            
         else if (justMoved)
         {
             // When finished moving...

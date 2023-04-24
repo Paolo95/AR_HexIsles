@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 
 public enum Menu { None, GameOver, MainMenu, LevelSelect, Credits, Options }
 
@@ -12,7 +13,14 @@ public class Manager : SingletonMonoBehaviour<Manager>
     #region Serialized fields
 
     [SerializeField] private Config config;
+    [SerializeField] private GameObject arSession;
+    [SerializeField] private GameObject arSessionOrigin;
+    [SerializeField] private GameObject mainCamera;
+    [SerializeField] private GameObject water;
     
+    public bool isARLevel = false;
+    public bool isScenePlaced = false;
+
     #region Audio
     [Space(2), Header("Audio")]
 
@@ -207,6 +215,32 @@ public class Manager : SingletonMonoBehaviour<Manager>
             LoadLatestLevel();
     }
 
+    public void setARLevel(bool selection)
+    {
+        if (selection)
+        {
+            isARLevel = true;
+        }
+        else
+        {
+            isARLevel = false;
+        }
+
+    }
+
+    public void setScenePlaced(bool selection)
+    {
+        if (selection)
+        {
+            isScenePlaced = true;
+        }
+        else
+        {
+            isScenePlaced = false;
+        }
+    }
+    
+
     private void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
         // Save current build index
@@ -298,7 +332,15 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void OnPressContinue()
     {
         if (inEscapeMenu)
+        {
+            setARLevel(false);
+            mainCamera.SetActive(true);
+            arSession.SetActive(false);
+            arSessionOrigin.SetActive(false);
+            water.SetActive(true);
+            LevelController.Current.SetMapActive();
             ExitMenus();
+        }
         else if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
@@ -307,8 +349,18 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
+        setARLevel(true);
+
         if (inEscapeMenu)
+        {
+            mainCamera.SetActive(false);
+            arSession.SetActive(true);
+            arSessionOrigin.SetActive(true);
+            water.SetActive(false);
+            LevelController.Current.SetMapInactive();
             ExitMenus();
+        }
+            
         else if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
@@ -325,16 +377,24 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void LoadLevel(int index)
     {
         if (index <= Config.Current.Levels.Length)
-            SceneManager.LoadScene(1);
+        {
+            SceneManager.LoadScene(1);   
+        }
         else
             ShowCredits();
+        
+            
     }
     
     public void LoadLevelAR(int index)
     {
         if (index <= Config.Current.Levels.Length)
         {
-            SceneManager.LoadScene("ARScene");
+            mainCamera.SetActive(false);
+            arSession.SetActive(true);
+            arSessionOrigin.SetActive(true);
+            water.SetActive(false);
+            SceneManager.LoadScene("Level 1");
         }
         else
             ShowCredits();
@@ -451,7 +511,6 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void ShowMainMenu(bool byEsc)
     {
         inEscapeMenu = byEsc;
-
         switch (menu)
         {
             case Menu.None:
