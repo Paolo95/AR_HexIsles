@@ -188,15 +188,7 @@ public class Player : MouseSelectable
             undo.Add(new PlayerState(player, player.transform.position, player.IsPetrified));
         Manager.Current.UndoStack.Push(undo.ToArray());
         targetPosition = GridUtility.GridToWorldPos(field.Position) + (.5f * field.Height + .25f * Height - .25f) * Vector3.up;
-        
-        if (Manager.Current.isARLevel)
-        {
-            //delta = targetPosition - currentPosition2D;
-            //currentPosition2D = targetPosition;
-            //targetPosition = transform.position + delta;
-            //targetPosition = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 2.2f * Time.deltaTime);
-        }
-        
+
         foreach (var player in GridUtility.GetPlayersAt(field.Position))
             if (player != this)
                 targetPosition.y += player.height * .5f;

@@ -64,34 +64,30 @@ public static class GridUtility
 
         float offset = (gridPos.y % 2 != 0) ? HexSize.y / 2 - .066666f : 0;
         worldPos.x = gridPos.x * HexSize.x + offset;
-        
+
         if (Manager.Current.isARLevel)
         {
             worldPos += Player.getDelta();
         }
         
-        Debug.Log("WORLDPOS " + worldPos);
         return worldPos;
     }
 
     public static Vector2Int WorldToGridPos(Vector3 worldPos)
     {
-        Debug.Log("DELTA " + Player.getDelta());
+      
         var gridPos = Vector2Int.zero;
-        
+
         if (Manager.Current.isARLevel)
         {
             worldPos -= Player.getDelta();
         }
-        
-        Debug.Log("WORLDPOS GRID " + worldPos);
 
         gridPos.y = Mathf.RoundToInt((worldPos.z) / .75f / HexSize.y);
 
         float offset = (gridPos.y % 2 != 0) ? HexSize.y / 2 - .066666f : 0;
         gridPos.x = Mathf.RoundToInt((worldPos.x - offset) / HexSize.x);
-
-        Debug.Log("GRIDPOS " + gridPos);
+        
         return gridPos;
     }
 
