@@ -176,7 +176,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     #region Initialization
     private void OnEnable() => input.Enable();
     private void OnDisable() => input.Disable();
-
+    
     void Awake()
     {
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -188,6 +188,8 @@ public class Manager : SingletonMonoBehaviour<Manager>
         // start playing music
         musicSource.clip = Config.Current.Music;
         musicSource.Play();
+
+        
 
         // Keep manager loaded during scene change, execute OnLoadCallback instead;
         DontDestroyOnLoad(gameObject);

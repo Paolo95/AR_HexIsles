@@ -15,9 +15,9 @@ public class LevelController : SingletonMonoBehaviour<LevelController>
             
         }else if (Manager.Current.isARLevel && Manager.Current.isScenePlaced)
         {
-            mapObject.SetActive(true);
             mapObject.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
             mapObject.transform.position = objectLevelPose.position;
+            mapObject.SetActive(true);
         }
         else
         {

@@ -67,10 +67,13 @@ public class Player : MouseSelectable
         }
 #endif
         targetPosition = transform.position;
+        currentPosition2D = targetPosition;
         initialColor = Color;
     }
 
     private bool isPositionInAR = false;
+    private Vector3 currentPosition2D;
+    private Vector3 delta;
 
     private void Update()
     {
@@ -79,10 +82,11 @@ public class Player : MouseSelectable
             targetPosition = transform.position;
             isPositionInAR = true;
         }
+        
         // Move to target position
         if (transform.position != targetPosition)
         {
-           transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
         }
             
         else if (justMoved)
@@ -164,12 +168,19 @@ public class Player : MouseSelectable
     public void MoveTo(HexField field)
     {
         if (!enabled) return;
-
+        
         var undo = new List<PlayerState>();
         foreach (var player in Manager.Current.Players)
             undo.Add(new PlayerState(player, player.transform.position, player.IsPetrified));
         Manager.Current.UndoStack.Push(undo.ToArray());
         targetPosition = GridUtility.GridToWorldPos(field.Position) + (.5f * field.Height + .25f * Height - .25f) * Vector3.up;
+        if (Manager.Current.isARLevel)
+        {
+            delta = targetPosition - currentPosition2D;
+            currentPosition2D = targetPosition;
+            targetPosition = transform.position + delta;
+            targetPosition = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 2.2f * Time.deltaTime);
+        }
         foreach (var player in GridUtility.GetPlayersAt(field.Position))
             if (player != this)
                 targetPosition.y += player.height * .5f;
