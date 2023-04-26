@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class Player : MouseSelectable
     [HideInInspector] public Vector2Int position;
     [HideInInspector] public Vector3 targetPosition;
     private bool justMoved = false;
+    
 
     [SerializeField, Range(0, 3)] private int jump = 1;
     public int JumpHeight => jump;
@@ -72,13 +74,24 @@ public class Player : MouseSelectable
     }
 
     private bool isPositionInAR = false;
-    private Vector3 currentPosition2D;
-    private Vector3 delta;
+    private static Vector3 currentPosition2D;
+    private static Vector3 delta;
+
+    public static Vector3 getDelta()
+    {
+        return delta;
+    }
+    
+    public static Vector3 getCurrentPosition()
+    {
+        return currentPosition2D;
+    }
 
     private void Update()
     {
         if (Manager.Current.isARLevel && !isPositionInAR)
         {
+            delta = transform.position - targetPosition;
             targetPosition = transform.position;
             isPositionInAR = true;
         }
@@ -86,14 +99,15 @@ public class Player : MouseSelectable
         // Move to target position
         if (transform.position != targetPosition)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+           transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+            
         }
             
         else if (justMoved)
         {
             // When finished moving...
             justMoved = false;
-
+            
             // Check for game over
             if (Manager.Current.Players.All(player => player.IsPetrified))
                 Manager.Current.ShowGameOver(Config.Current.AllPetrified);
@@ -174,13 +188,15 @@ public class Player : MouseSelectable
             undo.Add(new PlayerState(player, player.transform.position, player.IsPetrified));
         Manager.Current.UndoStack.Push(undo.ToArray());
         targetPosition = GridUtility.GridToWorldPos(field.Position) + (.5f * field.Height + .25f * Height - .25f) * Vector3.up;
+        
         if (Manager.Current.isARLevel)
         {
-            delta = targetPosition - currentPosition2D;
-            currentPosition2D = targetPosition;
-            targetPosition = transform.position + delta;
-            targetPosition = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 2.2f * Time.deltaTime);
+            //delta = targetPosition - currentPosition2D;
+            //currentPosition2D = targetPosition;
+            //targetPosition = transform.position + delta;
+            //targetPosition = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 2.2f * Time.deltaTime);
         }
+        
         foreach (var player in GridUtility.GetPlayersAt(field.Position))
             if (player != this)
                 targetPosition.y += player.height * .5f;

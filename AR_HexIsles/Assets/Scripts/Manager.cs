@@ -203,7 +203,6 @@ public class Manager : SingletonMonoBehaviour<Manager>
         //Initialize input & UI
         InitializeInputActions();
         InitializeUI();
-        
         // Load saved data
         if (PlayerPrefs.HasKey("completedLevels"))
             CompletedLevels = PlayerPrefs.GetInt("completedLevels");
