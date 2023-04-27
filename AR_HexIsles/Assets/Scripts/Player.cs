@@ -69,26 +69,20 @@ public class Player : MouseSelectable
         }
 #endif
         targetPosition = transform.position;
-        currentPosition2D = targetPosition;
         initialColor = Color;
     }
 
     private bool isPositionInAR = false;
-    private static Vector3 currentPosition2D;
     private static Vector3 delta;
 
     public static Vector3 getDelta()
     {
         return delta;
     }
-    
-    public static Vector3 getCurrentPosition()
-    {
-        return currentPosition2D;
-    }
 
     private void Update()
     {
+        
         if (Manager.Current.isARLevel && !isPositionInAR)
         {
             delta = transform.position - targetPosition;

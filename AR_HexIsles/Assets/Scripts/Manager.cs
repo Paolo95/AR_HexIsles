@@ -53,7 +53,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     private MainInput input;
     private CameraController cameraController;
-
+    
     public Flag[] Flags { get; private set; }
 
     #region Undo
@@ -169,6 +169,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             turnDisplay.text = turnsLeft + (turnsLeft == 1 ? " Turn" : " Turns");
         }
     }
+    
 
 
     #endregion
@@ -188,13 +189,11 @@ public class Manager : SingletonMonoBehaviour<Manager>
         // start playing music
         musicSource.clip = Config.Current.Music;
         musicSource.Play();
-
-        
-
+        PlayerPrefs.DeleteAll();
         // Keep manager loaded during scene change, execute OnLoadCallback instead;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnLoadCallback;
-
+        
         cameraController = GetComponentInChildren<CameraController>();
 
         // Get dialog box
@@ -379,23 +378,22 @@ public class Manager : SingletonMonoBehaviour<Manager>
     {
         if (index <= Config.Current.Levels.Length)
         {
-            SceneManager.LoadScene(1);   
+            SceneManager.LoadScene(index);   
         }
         else
             ShowCredits();
-        
-            
     }
     
     public void LoadLevelAR(int index)
     {
+        
         if (index <= Config.Current.Levels.Length)
         {
             mainCamera.SetActive(false);
             arSession.SetActive(true);
             arSessionOrigin.SetActive(true);
             water.SetActive(false);
-            SceneManager.LoadScene("Level 1");
+            SceneManager.LoadScene(index);
         }
         else
             ShowCredits();
@@ -403,6 +401,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     public void LoadCurrentLevel() => LoadLevel(LevelIndex);
     public void LoadNextLevel() => LoadLevel(LevelIndex + 1);
+    
     public void LoadLatestLevel() => LoadLevel(CompletedLevels + 1);
     
     public void LoadLatestLevelAR() => LoadLevelAR(CompletedLevels + 1);
@@ -476,22 +475,22 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
     }
     #endregion
-
+ 
     #region UI
 
     public static void UIAnimateOut(Animator animator) => animator.Play("Out");
 
     public void ShowGameOver(GameOver gameOverType)
     {
-        if (menu != Menu.None) return;
-
+       if (menu != Menu.None) return;
+       
         Manager.Current.DialogBox.HideDialog();
         if (Manager.Current.SelectedObject && Manager.Current.SelectedObject.GetComponent<Player>())
             Manager.Current.SelectedObject.ToggleSelect();
 
         if (gameOverType.UnlockNextLevel && Manager.Current.CompletedLevels == Manager.Current.LevelIndex - 1)
             Manager.Current.UnlockNextLevel();
-
+        
         gameOverNextButton.interactable = Manager.Current.CompletedLevels >= Manager.Current.LevelIndex;
 
         menu = Menu.GameOver;

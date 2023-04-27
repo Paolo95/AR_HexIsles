@@ -12,6 +12,7 @@ public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
     private ARRaycastManager aRRaycastManager;
     private ARPlaneManager arPlaneManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    private Pose pose;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
         {
             foreach (ARRaycastHit hit in hits)
             {
-                Pose pose = hit.pose;
+                pose = hit.pose;
                 LevelController.Current.SetObjectLevelPose(pose);
                 Manager.Current.setScenePlaced(true);
             }
@@ -57,6 +58,11 @@ public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
 
 
         }
+    }
+
+    public Pose GetCurrentPose()
+    {
+        return pose;
     }
 }
 
