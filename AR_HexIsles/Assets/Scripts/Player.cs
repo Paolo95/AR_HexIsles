@@ -90,6 +90,7 @@ public class Player : MouseSelectable
             isPositionInAR = true;
         }
         
+        
         // Move to target position
         if (transform.position != targetPosition)
         {

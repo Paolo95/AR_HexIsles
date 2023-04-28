@@ -4,25 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-public class LevelController : SingletonMonoBehaviour<LevelController>
+public class LevelController : MonoBehaviour
 {
-    [HideInInspector] public Pose objectLevelPose;
-    [SerializeField] private GameObject mapObject;
+    [HideInInspector] public static Pose objectLevelPose;
+    [SerializeField] private static GameObject mapObject;
     private bool isSceneInitialized = false;
 
     private void Awake()
     {
         if (Manager.Current.isARLevel)
         {
+            mapObject = GameObject.Find("Map");
             isSceneInitialized = false;
         }
-        
-        if (objectLevelPose.position == Vector3.zero && !isSceneInitialized && Manager.Current.isScenePlaced && Manager.Current.isARLevel)
-        {
-           mapObject.SetActive(false);
-           objectLevelPose = PlaceLevel.Current.GetCurrentPose();
-        }
-        
+
     }
 
     private void Update()
@@ -39,17 +34,17 @@ public class LevelController : SingletonMonoBehaviour<LevelController>
         }
     }
 
-    public void SetObjectLevelPose(Pose position)
+    public static void SetObjectLevelPose(Pose position)
     {
         objectLevelPose = position;
     }
 
-    public void SetMapActive()
+    public static void SetMapActive()
     {
         mapObject.SetActive(true);
     }
     
-    public void SetMapInactive()
+    public static void SetMapInactive()
     {
         mapObject.SetActive(false);
     }

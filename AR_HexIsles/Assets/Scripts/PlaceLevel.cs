@@ -7,7 +7,7 @@ using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
 
 [RequireComponent(requiredComponent: typeof(ARRaycastManager),
     requiredComponent2: typeof(ARPlaneManager))]
-public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
+public class PlaceLevel : MonoBehaviour
 {
     private ARRaycastManager aRRaycastManager;
     private ARPlaneManager arPlaneManager;
@@ -45,7 +45,7 @@ public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
             foreach (ARRaycastHit hit in hits)
             {
                 pose = hit.pose;
-                LevelController.Current.SetObjectLevelPose(pose);
+                LevelController.SetObjectLevelPose(pose);
                 Manager.Current.setScenePlaced(true);
             }
 
@@ -54,15 +54,8 @@ public class PlaceLevel : SingletonMonoBehaviour<PlaceLevel>
                 plane.gameObject.SetActive(false);
             }
 
-            arPlaneManager.enabled = false;
-
-
         }
     }
 
-    public Pose GetCurrentPose()
-    {
-        return pose;
-    }
 }
 

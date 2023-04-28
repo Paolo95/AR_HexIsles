@@ -338,7 +338,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             arSession.SetActive(false);
             arSessionOrigin.SetActive(false);
             water.SetActive(true);
-            LevelController.Current.SetMapActive();
+            LevelController.SetMapActive();
             ExitMenus();
         }
         else if (CompletedLevels >= Config.Current.Levels.Length)
@@ -354,10 +354,10 @@ public class Manager : SingletonMonoBehaviour<Manager>
         if (inEscapeMenu)
         {
             mainCamera.SetActive(false);
+            LevelController.SetMapInactive();
             arSession.SetActive(true);
             arSessionOrigin.SetActive(true);
             water.SetActive(false);
-            LevelController.Current.SetMapInactive();
             ExitMenus();
         }
             
@@ -376,7 +376,19 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     public void LoadLevel(int index)
     {
-        if (index <= Config.Current.Levels.Length)
+        if (isARLevel)
+        {
+            onStartup = true;
+            setARLevel(false);
+            mainCamera.SetActive(true);
+            water.SetActive(true);
+            arSession.SetActive(false);
+            arSessionOrigin.SetActive(false);
+            setScenePlaced(false);
+            SceneManager.LoadScene(index);
+            ShowMainMenu();
+            
+        }else if (index <= Config.Current.Levels.Length)
         {
             SceneManager.LoadScene(index);   
         }
