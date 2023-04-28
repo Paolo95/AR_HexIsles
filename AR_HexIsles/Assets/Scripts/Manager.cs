@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 
 public enum Menu { None, GameOver, MainMenu, LevelSelect, Credits, Options }
 
@@ -12,7 +13,14 @@ public class Manager : SingletonMonoBehaviour<Manager>
     #region Serialized fields
 
     [SerializeField] private Config config;
+    [SerializeField] private GameObject arSession;
+    [SerializeField] private GameObject arSessionOrigin;
+    [SerializeField] private GameObject mainCamera;
+    [SerializeField] private GameObject water;
     
+    public bool isARLevel = false;
+    public bool isScenePlaced = false;
+
     #region Audio
     [Space(2), Header("Audio")]
 
@@ -45,7 +53,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     private MainInput input;
     private CameraController cameraController;
-
+    
     public Flag[] Flags { get; private set; }
 
     #region Undo
@@ -161,6 +169,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             turnDisplay.text = turnsLeft + (turnsLeft == 1 ? " Turn" : " Turns");
         }
     }
+    
 
 
     #endregion
@@ -168,7 +177,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     #region Initialization
     private void OnEnable() => input.Enable();
     private void OnDisable() => input.Disable();
-
+    
     void Awake()
     {
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -180,11 +189,11 @@ public class Manager : SingletonMonoBehaviour<Manager>
         // start playing music
         musicSource.clip = Config.Current.Music;
         musicSource.Play();
-
+        PlayerPrefs.DeleteAll();
         // Keep manager loaded during scene change, execute OnLoadCallback instead;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnLoadCallback;
-
+        
         cameraController = GetComponentInChildren<CameraController>();
 
         // Get dialog box
@@ -193,7 +202,6 @@ public class Manager : SingletonMonoBehaviour<Manager>
         //Initialize input & UI
         InitializeInputActions();
         InitializeUI();
-        
         // Load saved data
         if (PlayerPrefs.HasKey("completedLevels"))
             CompletedLevels = PlayerPrefs.GetInt("completedLevels");
@@ -206,6 +214,32 @@ public class Manager : SingletonMonoBehaviour<Manager>
         else
             LoadLatestLevel();
     }
+
+    public void setARLevel(bool selection)
+    {
+        if (selection)
+        {
+            isARLevel = true;
+        }
+        else
+        {
+            isARLevel = false;
+        }
+
+    }
+
+    public void setScenePlaced(bool selection)
+    {
+        if (selection)
+        {
+            isScenePlaced = true;
+        }
+        else
+        {
+            isScenePlaced = false;
+        }
+    }
+    
 
     private void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
@@ -298,7 +332,15 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void OnPressContinue()
     {
         if (inEscapeMenu)
+        {
+            setARLevel(false);
+            mainCamera.SetActive(true);
+            arSession.SetActive(false);
+            arSessionOrigin.SetActive(false);
+            water.SetActive(true);
+            LevelController.SetMapActive();
             ExitMenus();
+        }
         else if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
@@ -307,8 +349,18 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
+        setARLevel(true);
+
         if (inEscapeMenu)
+        {
+            mainCamera.SetActive(false);
+            LevelController.SetMapInactive();
+            arSession.SetActive(true);
+            arSessionOrigin.SetActive(true);
+            water.SetActive(false);
             ExitMenus();
+        }
+            
         else if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
@@ -324,17 +376,36 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     public void LoadLevel(int index)
     {
-        if (index <= Config.Current.Levels.Length)
-            SceneManager.LoadScene(1);
+        if (isARLevel)
+        {
+            onStartup = true;
+            setARLevel(false);
+            mainCamera.SetActive(true);
+            water.SetActive(true);
+            arSession.SetActive(false);
+            arSessionOrigin.SetActive(false);
+            setScenePlaced(false);
+            SceneManager.LoadScene(index);
+            ShowMainMenu();
+            
+        }else if (index <= Config.Current.Levels.Length)
+        {
+            SceneManager.LoadScene(index);   
+        }
         else
             ShowCredits();
     }
     
     public void LoadLevelAR(int index)
     {
+        
         if (index <= Config.Current.Levels.Length)
         {
-            SceneManager.LoadScene("ARScene");
+            mainCamera.SetActive(false);
+            arSession.SetActive(true);
+            arSessionOrigin.SetActive(true);
+            water.SetActive(false);
+            SceneManager.LoadScene(index);
         }
         else
             ShowCredits();
@@ -342,6 +413,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     public void LoadCurrentLevel() => LoadLevel(LevelIndex);
     public void LoadNextLevel() => LoadLevel(LevelIndex + 1);
+    
     public void LoadLatestLevel() => LoadLevel(CompletedLevels + 1);
     
     public void LoadLatestLevelAR() => LoadLevelAR(CompletedLevels + 1);
@@ -415,22 +487,22 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
     }
     #endregion
-
+ 
     #region UI
 
     public static void UIAnimateOut(Animator animator) => animator.Play("Out");
 
     public void ShowGameOver(GameOver gameOverType)
     {
-        if (menu != Menu.None) return;
-
+       if (menu != Menu.None) return;
+       
         Manager.Current.DialogBox.HideDialog();
         if (Manager.Current.SelectedObject && Manager.Current.SelectedObject.GetComponent<Player>())
             Manager.Current.SelectedObject.ToggleSelect();
 
         if (gameOverType.UnlockNextLevel && Manager.Current.CompletedLevels == Manager.Current.LevelIndex - 1)
             Manager.Current.UnlockNextLevel();
-
+        
         gameOverNextButton.interactable = Manager.Current.CompletedLevels >= Manager.Current.LevelIndex;
 
         menu = Menu.GameOver;
@@ -451,7 +523,6 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void ShowMainMenu(bool byEsc)
     {
         inEscapeMenu = byEsc;
-
         switch (menu)
         {
             case Menu.None:

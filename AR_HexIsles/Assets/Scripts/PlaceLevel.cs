@@ -10,12 +10,9 @@ using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
 public class PlaceLevel : MonoBehaviour
 {
     private ARRaycastManager aRRaycastManager;
-    private bool isScenePlaced = false;
-
     private ARPlaneManager arPlaneManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
-
-    [SerializeField] private GameObject[] prefabArray;
+    private Pose pose;
 
     private void Awake()
     {
@@ -43,15 +40,13 @@ public class PlaceLevel : MonoBehaviour
     {
         if (finger.index != 0) return;
 
-        if (aRRaycastManager.Raycast(finger.currentTouch.screenPosition, hits, TrackableType.PlaneWithinPolygon) && !isScenePlaced)
+        if (aRRaycastManager.Raycast(finger.currentTouch.screenPosition, hits, TrackableType.PlaneWithinPolygon) && !Manager.Current.isScenePlaced)
         {
             foreach (ARRaycastHit hit in hits)
             {
-                Pose pose = hit.pose;
-                GameObject obj = Instantiate(prefabArray[0], pose.position, pose.rotation);
-                isScenePlaced = true;
-                obj.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
-
+                pose = hit.pose;
+                LevelController.SetObjectLevelPose(pose);
+                Manager.Current.setScenePlaced(true);
             }
 
             foreach (var plane in arPlaneManager.trackables)
@@ -59,10 +54,8 @@ public class PlaceLevel : MonoBehaviour
                 plane.gameObject.SetActive(false);
             }
 
-            arPlaneManager.enabled = false;
-
-
         }
     }
+
 }
 

@@ -30,7 +30,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a066acc41fdbbef48881cef781877972, type: 2}
   - {fileID: 11400000, guid: 1e6e77d5633d48b4aaefac677c066acd, type: 2}
   - {fileID: 11400000, guid: 3783b734ea3133246883b1c73edcd03a, type: 2}
-  - {fileID: 11400000, guid: 1a7d5e8601a829340a1b870ecbf1cad9, type: 2}
   levelComplete: {fileID: 11400000, guid: 5c6c2709993a71a4e81dcd7fc9ac9210, type: 2}
   outOfTurns: {fileID: 11400000, guid: 94825ecdd9fe2d44bae437d53091ff1c, type: 2}
   allPetrified: {fileID: 11400000, guid: eec97b25e4c774641b4d5d55cc9813e3, type: 2}

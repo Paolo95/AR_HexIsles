@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class Player : MouseSelectable
     [HideInInspector] public Vector2Int position;
     [HideInInspector] public Vector3 targetPosition;
     private bool justMoved = false;
+    
 
     [SerializeField, Range(0, 3)] private int jump = 1;
     public int JumpHeight => jump;
@@ -24,6 +26,7 @@ public class Player : MouseSelectable
             height = value;
             transform.localPosition = new Vector3(0, .5f * GridUtility.GetFieldAt(position).Height + .25f * height - .25f, 0);
             transform.localScale = new Vector3(transform.localScale.x, .5f * height, transform.localScale.x);
+            
         }
     }
 
@@ -69,16 +72,37 @@ public class Player : MouseSelectable
         initialColor = Color;
     }
 
+    private bool isPositionInAR = false;
+    private static Vector3 delta;
+
+    public static Vector3 getDelta()
+    {
+        return delta;
+    }
+
     private void Update()
     {
+        
+        if (Manager.Current.isARLevel && !isPositionInAR)
+        {
+            delta = transform.position - targetPosition;
+            targetPosition = transform.position;
+            isPositionInAR = true;
+        }
+        
+        
         // Move to target position
         if (transform.position != targetPosition)
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+        {
+           transform.position = Vector3.MoveTowards(transform.position, targetPosition, Config.Current.playerAnimationSpeed * 10f * Time.deltaTime);
+            
+        }
+            
         else if (justMoved)
         {
             // When finished moving...
             justMoved = false;
-
+            
             // Check for game over
             if (Manager.Current.Players.All(player => player.IsPetrified))
                 Manager.Current.ShowGameOver(Config.Current.AllPetrified);
@@ -153,12 +177,13 @@ public class Player : MouseSelectable
     public void MoveTo(HexField field)
     {
         if (!enabled) return;
-
+        
         var undo = new List<PlayerState>();
         foreach (var player in Manager.Current.Players)
             undo.Add(new PlayerState(player, player.transform.position, player.IsPetrified));
         Manager.Current.UndoStack.Push(undo.ToArray());
         targetPosition = GridUtility.GridToWorldPos(field.Position) + (.5f * field.Height + .25f * Height - .25f) * Vector3.up;
+
         foreach (var player in GridUtility.GetPlayersAt(field.Position))
             if (player != this)
                 targetPosition.y += player.height * .5f;
