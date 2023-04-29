@@ -17,6 +17,8 @@ public class Manager : SingletonMonoBehaviour<Manager>
     [SerializeField] private GameObject arSessionOrigin;
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject water;
+    [SerializeField] private GameObject playARButton;
+    [SerializeField] private GameObject continueButton;
     
     public bool isARLevel = false;
     public bool isScenePlaced = false;
@@ -331,6 +333,9 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     public void OnPressContinue()
     {
+
+        playARButton.SetActive(false);
+        
         if (inEscapeMenu)
         {
             setARLevel(false);
@@ -353,6 +358,8 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void OnPressContinueAR()
     {
         setARLevel(true);
+
+        continueButton.SetActive(false);
 
         if (inEscapeMenu)
         {
