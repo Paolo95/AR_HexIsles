@@ -191,7 +191,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         // start playing music
         musicSource.clip = Config.Current.Music;
         musicSource.Play();
-        PlayerPrefs.DeleteAll();
+      
         // Keep manager loaded during scene change, execute OnLoadCallback instead;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnLoadCallback;
@@ -332,21 +332,10 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void UnlockNextLevel() => CompletedLevels++;
 
     public void OnPressContinue()
-    {
-
+    { 
         playARButton.SetActive(false);
         
-        if (inEscapeMenu)
-        {
-            setARLevel(false);
-            mainCamera.SetActive(true);
-            arSession.SetActive(false);
-            arSessionOrigin.SetActive(false);
-            water.SetActive(true);
-            LevelController.SetMapActive();
-            ExitMenus();
-        }
-        else if (CompletedLevels >= Config.Current.Levels.Length)
+        if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
             LoadLatestLevel();
@@ -354,24 +343,21 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
-        setARLevel(true);
-
-        continueButton.SetActive(false);
-
         if (inEscapeMenu)
         {
-            mainCamera.SetActive(false);
-            LevelController.SetMapInactive();
-            arSession.SetActive(true);
-            arSessionOrigin.SetActive(true);
-            water.SetActive(false);
             ExitMenus();
         }
-            
-        else if (CompletedLevels >= Config.Current.Levels.Length)
-            RestartGame();
         else
-            LoadLatestLevelAR();
+        {
+            setARLevel(true);
+            continueButton.SetActive(false);
+
+            if (CompletedLevels >= Config.Current.Levels.Length)
+                RestartGame();
+            else
+                LoadLatestLevelAR();
+        }
+        
     }
 
     public void UnlockAllLevels()

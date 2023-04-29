@@ -39,13 +39,4 @@ public class LevelController : MonoBehaviour
         objectLevelPose = position;
     }
 
-    public static void SetMapActive()
-    {
-        mapObject.SetActive(true);
-    }
-    
-    public static void SetMapInactive()
-    {
-        mapObject.SetActive(false);
-    }
 }
