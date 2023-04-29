@@ -343,10 +343,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             arSession.SetActive(false);
             arSessionOrigin.SetActive(false);
             water.SetActive(true);
-            if (isARLevel)
-            {
-                LevelController.SetMapActive();
-            }
+            LevelController.SetMapActive();
             ExitMenus();
         }
         else if (CompletedLevels >= Config.Current.Levels.Length)
