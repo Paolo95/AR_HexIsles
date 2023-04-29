@@ -516,6 +516,19 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void ShowMainMenu(bool byEsc)
     {
         inEscapeMenu = byEsc;
+        
+        if (isARLevel)
+        {
+            onStartup = true;
+            setARLevel(false);
+            mainCamera.SetActive(true);
+            water.SetActive(true);
+            arSession.SetActive(false);
+            arSessionOrigin.SetActive(false);
+            setScenePlaced(false);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
         switch (menu)
         {
             case Menu.None:
