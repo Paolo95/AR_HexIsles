@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: StartUpAR
   m_EditorClassIdentifier: 
   pages:
-  - Click on signs to read them.
+  - You are in AR mode. When the plane is detected, tap to place the level on the
+    screen.
