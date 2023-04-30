@@ -372,12 +372,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         if (isARLevel)
         {
             onStartup = true;
-            setARLevel(false);
-            mainCamera.SetActive(true);
-            water.SetActive(true);
-            arSession.SetActive(false);
-            arSessionOrigin.SetActive(false);
-            setScenePlaced(false);
+            Set2DSession();
             SceneManager.LoadScene(index);
             ShowMainMenu();
             
@@ -388,16 +383,31 @@ public class Manager : SingletonMonoBehaviour<Manager>
         else
             ShowCredits();
     }
+
+    private void SetARSession()
+    {
+        mainCamera.SetActive(false);
+        arSession.SetActive(true);
+        arSessionOrigin.SetActive(true);
+        water.SetActive(false);
+    }
+    
+    private void Set2DSession()
+    {
+        setARLevel(false);
+        mainCamera.SetActive(true);
+        water.SetActive(true);
+        arSession.SetActive(false);
+        arSessionOrigin.SetActive(false);
+        setScenePlaced(false);
+    }
     
     public void LoadLevelAR(int index)
     {
         
         if (index <= Config.Current.Levels.Length)
         {
-            mainCamera.SetActive(false);
-            arSession.SetActive(true);
-            arSessionOrigin.SetActive(true);
-            water.SetActive(false);
+            SetARSession();
             SceneManager.LoadScene(index);
         }
         else
@@ -520,12 +530,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         if (isARLevel)
         {
             onStartup = true;
-            setARLevel(false);
-            mainCamera.SetActive(true);
-            water.SetActive(true);
-            arSession.SetActive(false);
-            arSessionOrigin.SetActive(false);
-            setScenePlaced(false);
+            Set2DSession();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
