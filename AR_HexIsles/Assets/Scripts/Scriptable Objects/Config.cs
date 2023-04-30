@@ -78,6 +78,9 @@ public class Config : SingletonScriptableObject<Config>
 
     [SerializeField] private Dialog startUpDialog;
     public Dialog StartUpDialog => startUpDialog;
+    
+    [SerializeField] private Dialog startUpDialogAR;
+    public Dialog StartUpDialogAR => startUpDialogAR;
 
     [Space(2), Header("Editor")]
 
