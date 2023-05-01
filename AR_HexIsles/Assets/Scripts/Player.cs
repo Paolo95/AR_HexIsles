@@ -75,7 +75,7 @@ public class Player : MouseSelectable
     private bool isPositionInAR = false;
     private static Vector3 delta;
 
-    public static Vector3 getDelta()
+    public static Vector3 GetDelta()
     {
         return delta;
     }

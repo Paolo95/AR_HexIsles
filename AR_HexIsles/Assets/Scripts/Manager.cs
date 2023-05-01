@@ -218,7 +218,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             LoadLatestLevel();
     }
 
-    public void setARLevel(bool selection)
+    public void SetARLevel(bool selection)
     {
         if (selection)
         {
@@ -231,7 +231,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     }
     
-    public void setARButtonPressed(bool selection)
+    private void SetARButtonPressed(bool selection)
     {
         if (selection)
         {
@@ -244,7 +244,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
 
     }
 
-    public void setScenePlaced(bool selection)
+    public void SetScenePlaced(bool selection)
     {
         if (selection)
         {
@@ -357,7 +357,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
-        setARButtonPressed(true);
+        SetARButtonPressed(true);
         
         if (inEscapeMenu)
         {
@@ -365,7 +365,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
         else
         {
-            setARLevel(true);
+            SetARLevel(true);
             
             continueButton.SetActive(false);
 
@@ -407,17 +407,17 @@ public class Manager : SingletonMonoBehaviour<Manager>
         arSession.SetActive(true);
         arSessionOrigin.SetActive(true);
         water.SetActive(false);
-        setScenePlaced(false);
+        SetScenePlaced(false);
     }
     
     private void Set2DSession()
     {
-        setARLevel(false);
+        SetARLevel(false);
         mainCamera.SetActive(true);
         water.SetActive(true);
         arSession.SetActive(false);
         arSessionOrigin.SetActive(false);
-        setScenePlaced(false);
+        SetScenePlaced(false);
     }
     
     public void LoadLevelAR(int index)
@@ -638,7 +638,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         if (isARButtonPressed)
         {
             onStartup = true;
-            setARLevel(false);
+            SetARLevel(false);
             Manager.Current.LoadLevel(displayedLevels[display]);
         }
         else

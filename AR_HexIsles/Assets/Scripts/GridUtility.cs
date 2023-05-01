@@ -67,7 +67,7 @@ public static class GridUtility
         
         if (Manager.Current.isARLevel)
         {
-            worldPos += Player.getDelta();
+            worldPos += Player.GetDelta();
         }
 
         return worldPos;
@@ -81,7 +81,7 @@ public static class GridUtility
         
         if (Manager.Current.isARLevel)
         {
-            worldPos -= Player.getDelta();
+            worldPos -= Player.GetDelta();
         }
 
     

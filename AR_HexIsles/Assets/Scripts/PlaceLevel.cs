@@ -46,7 +46,7 @@ public class PlaceLevel : MonoBehaviour
             {
                 pose = hit.pose;
                 LevelController.SetObjectLevelPose(pose);
-                Manager.Current.setScenePlaced(true);
+                Manager.Current.SetScenePlaced(true);
             }
 
             foreach (var plane in arPlaneManager.trackables)
