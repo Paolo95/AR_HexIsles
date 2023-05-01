@@ -231,20 +231,6 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
 
     }
-    
-    private void SetARButtonPressed(bool selection)
-    {
-        if (selection)
-        {
-            isARButtonPressed = true;
-        }
-        else
-        {
-            isARButtonPressed = false;
-        }
-
-    }
-
     public void SetScenePlaced(bool selection)
     {
         if (selection)
@@ -358,7 +344,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
-        SetARButtonPressed(true);
+        isARButtonPressed = true;
         
         if (inEscapeMenu)
         {
