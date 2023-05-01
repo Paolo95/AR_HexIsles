@@ -22,6 +22,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public bool isARLevel = false;
     public bool isScenePlaced = false;
+    private bool isARButtonPressed = false;
 
     #region Audio
     [Space(2), Header("Audio")]
@@ -229,6 +230,19 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
 
     }
+    
+    public void setARButtonPressed(bool selection)
+    {
+        if (selection)
+        {
+            isARButtonPressed = true;
+        }
+        else
+        {
+            isARButtonPressed = false;
+        }
+
+    }
 
     public void setScenePlaced(bool selection)
     {
@@ -343,6 +357,8 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void OnPressContinueAR()
     {
+        setARButtonPressed(true);
+        
         if (inEscapeMenu)
         {
             ExitMenus();
@@ -350,6 +366,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         else
         {
             setARLevel(true);
+            
             continueButton.SetActive(false);
 
             if (CompletedLevels >= Config.Current.Levels.Length)
@@ -390,6 +407,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         arSession.SetActive(true);
         arSessionOrigin.SetActive(true);
         water.SetActive(false);
+        setScenePlaced(false);
     }
     
     private void Set2DSession()
@@ -615,7 +633,20 @@ public class Manager : SingletonMonoBehaviour<Manager>
             LevelSelectPage--;
     }
 
-    public void SelectLevel(int display) => Manager.Current.LoadLevel(displayedLevels[display]);
+    public void SelectLevel(int display)
+    {
+        if (isARButtonPressed)
+        {
+            onStartup = true;
+            setARLevel(false);
+            Manager.Current.LoadLevel(displayedLevels[display]);
+        }
+        else
+        {
+            Manager.Current.LoadLevel(displayedLevels[display]);
+        }
+        
+    }
 
     public void ExitMenus()
     {
