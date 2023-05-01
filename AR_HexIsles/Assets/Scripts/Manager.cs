@@ -23,6 +23,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public bool isARLevel = false;
     public bool isScenePlaced = false;
     private bool isARButtonPressed = false;
+    private bool isLevelButtonPressed = false;
 
     #region Audio
     [Space(2), Header("Audio")]
@@ -348,7 +349,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
     public void OnPressContinue()
     { 
         playARButton.SetActive(false);
-        
+       
         if (CompletedLevels >= Config.Current.Levels.Length)
             RestartGame();
         else
@@ -392,7 +393,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             Set2DSession();
             SceneManager.LoadScene(index);
             ShowMainMenu();
-            
+
         }else if (index <= Config.Current.Levels.Length)
         {
             SceneManager.LoadScene(index);   
@@ -437,7 +438,18 @@ public class Manager : SingletonMonoBehaviour<Manager>
     
     public void LoadLatestLevel() => LoadLevel(CompletedLevels + 1);
     
-    public void LoadLatestLevelAR() => LoadLevelAR(CompletedLevels + 1);
+    public void LoadLatestLevelAR()
+    {
+        if (isLevelButtonPressed)
+        {
+            LoadLevelAR(SceneManager.GetActiveScene().buildIndex);
+        }
+        else
+        {
+            LoadLevelAR(CompletedLevels + 1);
+        }
+        
+    }
 
     public void RestartGame()
     {
@@ -640,6 +652,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
             onStartup = true;
             SetARLevel(false);
             Manager.Current.LoadLevel(displayedLevels[display]);
+            isLevelButtonPressed = true;
         }
         else
         {
