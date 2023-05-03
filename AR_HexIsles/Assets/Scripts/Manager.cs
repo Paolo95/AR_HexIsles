@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -642,6 +642,7 @@ public class Manager : SingletonMonoBehaviour<Manager>
         }
         else
         {
+            playARButton.SetActive(false);
             Manager.Current.LoadLevel(displayedLevels[display]);
         }
         
